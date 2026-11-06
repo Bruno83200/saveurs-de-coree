@@ -481,18 +481,24 @@ body.drawer-open .nav-toggle span::after { transform: translateY(-6px) rotate(-4
 .hero {
   position: relative;
   isolation: isolate;
-  background: var(--ink);
-  overflow: hidden;
+  background: var(--paper);
   display: flex;
-  align-items: stretch;
+  align-items: center;
+  gap: clamp(24px, 3.4vw, 64px);
+  padding-block: clamp(20px, 2.4vw, 36px) clamp(24px, 2.8vw, 44px);
 }
-/* Visuel d'accueil : affiché en entier (aucun recadrage), collé au bord droit */
+/* L'affiche d'accueil : entière, en grand, sans recadrage */
 .hero__media {
   position: relative;
   order: 2;
-  flex: 0 0 52%;
-  max-width: 52%;
+  flex: 0 0 50%;
+  max-width: 50%;
+  aspect-ratio: 16 / 9;
+  /* affiche en pleine saignée à droite : coins arrondis uniquement côté texte */
+  border-radius: clamp(14px, 1.3vw, 22px) 0 0 clamp(14px, 1.3vw, 22px);
+  overflow: hidden;
   background: var(--ink);
+  box-shadow: var(--shadow-l);
 }
 .hero__media img {
   width: 100%;
@@ -500,56 +506,48 @@ body.drawer-open .nav-toggle span::after { transform: translateY(-6px) rotate(-4
   object-fit: contain;
   object-position: center;
 }
-.hero__scrim {
-  display: block;
-  background: linear-gradient(to right, var(--ink) 0%, rgba(23, 18, 15, 0.55) 4%, rgba(23, 18, 15, 0) 12%);
-  pointer-events: none;
-}
+.hero__scrim { display: none; }
 
 .hero__inner {
   order: 1;
   flex: 1 1 auto;
-  display: flex;
-  align-items: center;
-  padding-right: clamp(24px, 2.6vw, 44px);
+  min-width: 0;
   padding-left: max(var(--gutter), calc((100vw - var(--max)) / 2 + var(--gutter)));
-  padding-block: clamp(22px, 2.6vw, 40px);
+  text-align: left;
 }
 .hero-card {
-  width: 100%;
-  display: block;
-  color: #fff;
+  max-width: 560px;
+  color: var(--ink);
 }
-.hero-card .eyebrow { color: var(--gold); margin-bottom: 10px; }
+.hero-card .eyebrow { color: var(--red); margin-bottom: 12px; }
 .hero-card h1 {
-  font-size: clamp(1.55rem, 2.15vw, 2.15rem);
-  margin-bottom: 10px;
-  max-width: 20ch;
+  font-size: clamp(1.7rem, 2.5vw, 2.4rem);
+  margin-bottom: 14px;
 }
 .hero-card .lead {
-  color: rgba(255, 255, 255, 0.78);
+  color: var(--ink-soft);
   margin: 0;
-  font-size: clamp(0.9rem, 0.95vw, 0.98rem);
+  font-size: clamp(0.95rem, 1.02vw, 1.04rem);
   max-width: 44ch;
 }
 .hero-card__cta {
   display: flex;
-  gap: 10px;
+  gap: 12px;
   flex-wrap: wrap;
-  margin-top: clamp(16px, 1.6vw, 22px);
+  margin-top: clamp(18px, 2vw, 26px);
 }
 .hero-card__facts {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px 20px;
-  margin-top: clamp(16px, 1.6vw, 22px);
-  padding-top: 14px;
-  border-top: 1px solid rgba(255, 255, 255, 0.16);
-  font-size: 0.78rem;
-  color: rgba(255, 255, 255, 0.7);
+  gap: 8px 22px;
+  margin-top: clamp(18px, 2vw, 26px);
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  font-size: 0.79rem;
+  color: var(--ink-mute);
 }
 .hero-card__facts span { display: inline-flex; align-items: center; gap: 7px; }
-.hero-card__facts svg { width: 14px; height: 14px; color: var(--gold); }
+.hero-card__facts svg { width: 14px; height: 14px; color: var(--red); }
 
 /* --------------------------------------------------------------------------
    6. Bandeau de réassurance
@@ -1066,6 +1064,11 @@ html[data-layout="mobile"] .reveal { transition-duration: 0.45s; }
 /* ==========================================================================
    16. MISE EN PAGE MOBILE
    ========================================================================== */
+/* Desktop intermédiaire : plus de place au texte, affiche un peu plus compacte */
+@media (min-width: 901px) and (max-width: 1200px) {
+  .hero__media { flex-basis: 46%; max-width: 46%; }
+}
+
 @media (max-width: 900px) {
   :root { --gutter: 18px; --header-h: 64px; }
 
@@ -1083,32 +1086,35 @@ html[data-layout="mobile"] .reveal { transition-duration: 0.45s; }
   .action-bar { display: grid; }
   body { padding-bottom: 74px; }
 
-  /* Héros : visuel recadré en 3/2 + carte en chevauchement */
-  .hero { background: var(--paper); display: block; }
-  .hero__media { flex: none; width: 100%; max-width: none; height: auto; aspect-ratio: 3 / 2; }
-  .hero__media img { object-fit: cover; object-position: center 40%; }
-  .hero__scrim {
-    display: block;
-    background: linear-gradient(to bottom, rgba(10, 7, 5, 0) 55%, rgba(10, 7, 5, 0.34) 100%);
+  /* Héros mobile : visuel en 3/2 + carte d'accroche en chevauchement */
+  .hero { display: block; padding-block: 0; gap: 0; }
+  .hero__media {
+    width: 100%;
+    max-width: none;
+    flex: none;
+    height: auto;
+    aspect-ratio: 3 / 2;
+    border-radius: 0;
+    box-shadow: none;
   }
-  .page-hero__mark { display: none; }
-  .hero__inner { display: block; padding: 0; }
+  .hero__media img { object-fit: cover; object-position: center 40%; }
+  .hero__inner { padding: 0; text-align: left; }
   .hero-card {
-    display: block;
+    max-width: none;
     position: relative;
     margin: -46px var(--gutter) 0;
-    width: auto;
     background: var(--paper);
-    color: var(--ink);
     border: 1px solid var(--line);
     border-radius: var(--radius-l);
     box-shadow: var(--shadow);
     padding: 22px 20px 24px;
+    text-align: left;
   }
-  .hero-card .eyebrow { color: var(--red); }
-  .hero-card h1 { color: var(--ink); font-size: clamp(1.55rem, 6.2vw, 1.95rem); margin-bottom: 12px; max-width: none; }
-  .hero-card .lead { color: var(--ink-soft); font-size: 0.95rem; max-width: none; }
-  .hero-card__cta { display: grid; gap: 10px; margin-top: 18px; }
+  .hero-card .eyebrow { justify-content: flex-start; margin-bottom: 10px; }
+  .hero-card .eyebrow::after { display: none; }
+  .hero-card h1 { font-size: clamp(1.55rem, 6.2vw, 1.95rem); margin-bottom: 12px; }
+  .hero-card .lead { color: var(--ink-soft); font-size: 0.95rem; margin: 0; }
+  .hero-card__cta { display: grid; gap: 10px; margin-top: 18px; justify-content: stretch; }
   .hero-card .btn { width: 100%; }
   .hero-card .btn--light {
     --btn-bg: transparent;
@@ -1118,14 +1124,13 @@ html[data-layout="mobile"] .reveal { transition-duration: 0.45s; }
   }
   .hero-card .btn--light:hover { background: rgba(23, 18, 15, 0.06); }
   .hero-card__facts {
-    border-top-color: var(--line);
-    color: var(--ink-mute);
+    justify-content: flex-start;
     font-size: 0.78rem;
     gap: 6px 16px;
     margin-top: 18px;
     padding-top: 14px;
+    border-top-color: var(--line);
   }
-  .hero-card__facts svg { color: var(--red); }
 
   .facts { grid-template-columns: 1fr 1fr; }
   .facts__item { padding: 18px 14px; gap: 10px; }
@@ -1236,36 +1241,33 @@ html[data-layout="mobile"] .dish-grid {
   padding-bottom: 8px;
 }
 html[data-layout="mobile"] .dish-card { scroll-snap-align: start; }
-html[data-layout="mobile"] .hero { display: block; background: var(--paper); }
+html[data-layout="mobile"] .hero { display: block; padding-block: 0; gap: 0; }
 html[data-layout="mobile"] .hero__media {
-  flex: none;
   width: 100%;
   max-width: none;
+  flex: none;
   height: auto;
   aspect-ratio: 3 / 2;
+  border-radius: 0;
+  box-shadow: none;
 }
 html[data-layout="mobile"] .hero__media img { object-fit: cover; object-position: center 40%; }
-html[data-layout="mobile"] .hero__scrim {
-  display: block;
-  background: linear-gradient(to bottom, rgba(10, 7, 5, 0) 55%, rgba(10, 7, 5, 0.34) 100%);
-}
-html[data-layout="mobile"] .page-hero__mark { display: none; }
-html[data-layout="mobile"] .hero__inner { display: block; padding: 0; }
+html[data-layout="mobile"] .hero__inner { padding: 0; text-align: left; }
 html[data-layout="mobile"] .hero-card {
-  display: block;
+  max-width: none;
   position: relative;
   margin: -46px var(--gutter) 0;
-  width: auto;
   background: var(--paper);
-  color: var(--ink);
   border: 1px solid var(--line);
   border-radius: var(--radius-l);
   box-shadow: var(--shadow);
+  text-align: left;
 }
-html[data-layout="mobile"] .hero-card .eyebrow { color: var(--red); }
-html[data-layout="mobile"] .hero-card h1 { color: var(--ink); max-width: none; }
-html[data-layout="mobile"] .hero-card .lead { color: var(--ink-soft); max-width: none; }
-html[data-layout="mobile"] .hero-card__facts { border-top-color: var(--line); color: var(--ink-mute); }
+html[data-layout="mobile"] .hero-card .eyebrow { justify-content: flex-start; }
+html[data-layout="mobile"] .hero-card .eyebrow::after { display: none; }
+html[data-layout="mobile"] .hero-card h1 { max-width: none; }
+html[data-layout="mobile"] .hero-card .lead { max-width: none; margin: 0; }
+html[data-layout="mobile"] .hero-card__facts { justify-content: flex-start; border-top-color: var(--line); }
 html[data-layout="mobile"] .hero-card__facts svg { color: var(--red); }
 html[data-layout="mobile"] .hero-card__cta { display: grid; gap: 10px; margin-top: 18px; }
 html[data-layout="mobile"] .hero-card__cta .btn { width: 100%; }

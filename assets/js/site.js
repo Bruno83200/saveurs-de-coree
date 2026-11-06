@@ -275,19 +275,35 @@
   /* ---------------------------------------------------------------------
      8. Apparition au défilement
      --------------------------------------------------------------------- */
-  var reveals = document.querySelectorAll(".reveal");
+  var reveals = Array.prototype.slice.call(document.querySelectorAll(".reveal"));
+
+  function revealNow(el) {
+    el.classList.add("is-visible");
+  }
+
   if (reveals.length && !reducedMotion && "IntersectionObserver" in window) {
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (en) {
         if (en.isIntersecting) {
-          en.target.classList.add("is-visible");
+          revealNow(en.target);
           io.unobserve(en.target);
         }
       });
-    }, { rootMargin: "0px 0px -8% 0px", threshold: 0.08 });
+    }, { rootMargin: "0px 0px -2% 0px", threshold: 0.01 });
     reveals.forEach(function (el) { io.observe(el); });
+
+    // Ce qui est déjà à l'écran au chargement s'affiche tout de suite
+    var firstPaint = function () {
+      var limit = window.innerHeight * 0.99;
+      reveals.forEach(function (el) {
+        if (el.getBoundingClientRect().top < limit) revealNow(el);
+      });
+    };
+    firstPaint();
+    window.addEventListener("load", firstPaint);
+    setTimeout(firstPaint, 260);
   } else {
-    reveals.forEach(function (el) { el.classList.add("is-visible"); });
+    reveals.forEach(revealNow);
   }
 
   /* ---------------------------------------------------------------------
