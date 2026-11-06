@@ -28,8 +28,8 @@
   --shadow-s: 0 2px 10px -6px rgba(23, 18, 15, 0.4);
   --shadow: 0 18px 40px -28px rgba(23, 18, 15, 0.55);
   --shadow-l: 0 30px 70px -40px rgba(23, 18, 15, 0.6);
-  --max: 1180px;
-  --gutter: 24px;
+  --max: 1280px;
+  --gutter: 28px;
   --header-h: 76px;
   --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, "Times New Roman", serif;
   --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -483,72 +483,73 @@ body.drawer-open .nav-toggle span::after { transform: translateY(-6px) rotate(-4
   isolation: isolate;
   background: var(--ink);
   overflow: hidden;
+  display: flex;
+  align-items: stretch;
 }
+/* Visuel d'accueil : affiché en entier (aucun recadrage), collé au bord droit */
 .hero__media {
   position: relative;
-  height: clamp(300px, 58vh, 580px);
-  overflow: hidden;
+  order: 2;
+  flex: 0 0 52%;
+  max-width: 52%;
+  background: var(--ink);
 }
 .hero__media img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  object-position: center 32%;
+  object-fit: contain;
+  object-position: center;
 }
 .hero__scrim {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to bottom, rgba(10, 7, 5, 0) 62%, rgba(10, 7, 5, 0.55) 100%);
+  display: block;
+  background: linear-gradient(to right, var(--ink) 0%, rgba(23, 18, 15, 0.55) 4%, rgba(23, 18, 15, 0) 12%);
+  pointer-events: none;
 }
+
 .hero__inner {
-  position: relative;
-  z-index: 1;
-  padding-block: clamp(22px, 3vw, 40px) clamp(26px, 3.4vw, 46px);
+  order: 1;
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  padding-right: clamp(24px, 2.6vw, 44px);
+  padding-left: max(var(--gutter), calc((100vw - var(--max)) / 2 + var(--gutter)));
+  padding-block: clamp(22px, 2.6vw, 40px);
 }
 .hero-card {
   width: 100%;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  grid-template-areas:
-    "copy cta"
-    "facts facts";
-  gap: 18px 40px;
-  align-items: end;
+  display: block;
   color: #fff;
 }
-.hero-card__copy { grid-area: copy; }
 .hero-card .eyebrow { color: var(--gold); margin-bottom: 10px; }
 .hero-card h1 {
-  font-size: clamp(1.85rem, 3.2vw, 2.85rem);
+  font-size: clamp(1.55rem, 2.15vw, 2.15rem);
   margin-bottom: 10px;
-  max-width: 24ch;
+  max-width: 20ch;
 }
 .hero-card .lead {
   color: rgba(255, 255, 255, 0.78);
   margin: 0;
-  font-size: clamp(0.96rem, 1.12vw, 1.05rem);
-  max-width: 56ch;
+  font-size: clamp(0.9rem, 0.95vw, 0.98rem);
+  max-width: 44ch;
 }
 .hero-card__cta {
-  grid-area: cta;
   display: flex;
-  gap: 12px;
+  gap: 10px;
   flex-wrap: wrap;
-  justify-content: flex-end;
-  padding-bottom: 4px;
+  margin-top: clamp(16px, 1.6vw, 22px);
 }
 .hero-card__facts {
-  grid-area: facts;
   display: flex;
   flex-wrap: wrap;
-  gap: 10px 24px;
-  padding-top: 16px;
+  gap: 8px 20px;
+  margin-top: clamp(16px, 1.6vw, 22px);
+  padding-top: 14px;
   border-top: 1px solid rgba(255, 255, 255, 0.16);
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   color: rgba(255, 255, 255, 0.7);
 }
-.hero-card__facts span { display: inline-flex; align-items: center; gap: 8px; }
-.hero-card__facts svg { width: 15px; height: 15px; color: var(--gold); }
+.hero-card__facts span { display: inline-flex; align-items: center; gap: 7px; }
+.hero-card__facts svg { width: 14px; height: 14px; color: var(--gold); }
 
 /* --------------------------------------------------------------------------
    6. Bandeau de réassurance
@@ -760,15 +761,36 @@ body.drawer-open .nav-toggle span::after { transform: translateY(-6px) rotate(-4
    11. Carte / menu
    -------------------------------------------------------------------------- */
 .page-hero {
-  padding-block: clamp(40px, 6vw, 76px) clamp(24px, 3vw, 40px);
+  position: relative;
+  overflow: hidden;
+  padding-block: clamp(28px, 3.4vw, 46px) clamp(20px, 2.6vw, 32px);
   border-bottom: 1px solid var(--line);
   background:
     radial-gradient(circle at 82% 12%, rgba(201, 63, 52, 0.09), transparent 46%),
     radial-gradient(circle at 10% 90%, rgba(31, 79, 158, 0.07), transparent 44%),
     var(--paper-2);
 }
-.page-hero h1 { margin-bottom: 14px; }
-.page-hero .lead { margin-bottom: 0; }
+.page-hero h1 {
+  margin-bottom: 10px;
+  font-size: clamp(1.7rem, 2.7vw, 2.5rem);
+  max-width: 24ch;
+}
+.page-hero .lead { margin-bottom: 0; max-width: 68ch; }
+
+/* motif discret à droite du bandeau : équilibre le bloc de texte */
+.page-hero__mark {
+  position: absolute;
+  right: max(20px, 5vw);
+  top: 50%;
+  transform: translateY(-50%);
+  width: clamp(120px, 15vw, 230px);
+  aspect-ratio: 1 / 1;
+  height: auto;
+  color: var(--ink);
+  opacity: 0.06;
+  pointer-events: none;
+  z-index: 0;
+}
 
 .menu-nav {
   position: sticky;
@@ -1061,12 +1083,16 @@ html[data-layout="mobile"] .reveal { transition-duration: 0.45s; }
   .action-bar { display: grid; }
   body { padding-bottom: 74px; }
 
-  /* Héros : visuel non recadré + carte en chevauchement */
-  .hero { background: var(--paper); }
-  .hero__media { height: auto; aspect-ratio: 3 / 2; }
-  .hero__media img { object-position: center 40%; }
-  .hero__scrim { background: linear-gradient(to bottom, rgba(10, 7, 5, 0) 55%, rgba(10, 7, 5, 0.34) 100%); }
-  .hero__inner { padding-block: 0; }
+  /* Héros : visuel recadré en 3/2 + carte en chevauchement */
+  .hero { background: var(--paper); display: block; }
+  .hero__media { flex: none; width: 100%; max-width: none; height: auto; aspect-ratio: 3 / 2; }
+  .hero__media img { object-fit: cover; object-position: center 40%; }
+  .hero__scrim {
+    display: block;
+    background: linear-gradient(to bottom, rgba(10, 7, 5, 0) 55%, rgba(10, 7, 5, 0.34) 100%);
+  }
+  .page-hero__mark { display: none; }
+  .hero__inner { display: block; padding: 0; }
   .hero-card {
     display: block;
     position: relative;
@@ -1080,9 +1106,9 @@ html[data-layout="mobile"] .reveal { transition-duration: 0.45s; }
     padding: 22px 20px 24px;
   }
   .hero-card .eyebrow { color: var(--red); }
-  .hero-card h1 { color: var(--ink); font-size: clamp(1.55rem, 6.2vw, 1.95rem); margin-bottom: 12px; }
-  .hero-card .lead { color: var(--ink-soft); font-size: 0.95rem; }
-  .hero-card__cta { display: grid; gap: 10px; margin-top: 18px; padding-bottom: 0; }
+  .hero-card h1 { color: var(--ink); font-size: clamp(1.55rem, 6.2vw, 1.95rem); margin-bottom: 12px; max-width: none; }
+  .hero-card .lead { color: var(--ink-soft); font-size: 0.95rem; max-width: none; }
+  .hero-card__cta { display: grid; gap: 10px; margin-top: 18px; }
   .hero-card .btn { width: 100%; }
   .hero-card .btn--light {
     --btn-bg: transparent;
@@ -1210,8 +1236,21 @@ html[data-layout="mobile"] .dish-grid {
   padding-bottom: 8px;
 }
 html[data-layout="mobile"] .dish-card { scroll-snap-align: start; }
-html[data-layout="mobile"] .hero__media { height: auto; aspect-ratio: 3 / 2; }
-html[data-layout="mobile"] .hero__inner { padding-block: 0; }
+html[data-layout="mobile"] .hero { display: block; background: var(--paper); }
+html[data-layout="mobile"] .hero__media {
+  flex: none;
+  width: 100%;
+  max-width: none;
+  height: auto;
+  aspect-ratio: 3 / 2;
+}
+html[data-layout="mobile"] .hero__media img { object-fit: cover; object-position: center 40%; }
+html[data-layout="mobile"] .hero__scrim {
+  display: block;
+  background: linear-gradient(to bottom, rgba(10, 7, 5, 0) 55%, rgba(10, 7, 5, 0.34) 100%);
+}
+html[data-layout="mobile"] .page-hero__mark { display: none; }
+html[data-layout="mobile"] .hero__inner { display: block; padding: 0; }
 html[data-layout="mobile"] .hero-card {
   display: block;
   position: relative;
@@ -1224,8 +1263,8 @@ html[data-layout="mobile"] .hero-card {
   box-shadow: var(--shadow);
 }
 html[data-layout="mobile"] .hero-card .eyebrow { color: var(--red); }
-html[data-layout="mobile"] .hero-card h1 { color: var(--ink); }
-html[data-layout="mobile"] .hero-card .lead { color: var(--ink-soft); }
+html[data-layout="mobile"] .hero-card h1 { color: var(--ink); max-width: none; }
+html[data-layout="mobile"] .hero-card .lead { color: var(--ink-soft); max-width: none; }
 html[data-layout="mobile"] .hero-card__facts { border-top-color: var(--line); color: var(--ink-mute); }
 html[data-layout="mobile"] .hero-card__facts svg { color: var(--red); }
 html[data-layout="mobile"] .hero-card__cta { display: grid; gap: 10px; margin-top: 18px; }
