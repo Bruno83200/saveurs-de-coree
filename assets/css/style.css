@@ -478,24 +478,30 @@ body.drawer-open .nav-toggle span::after { transform: translateY(-6px) rotate(-4
    Desktop : visuel plein cadre + bandeau d'accroche en bas (le titre du visuel
    reste entièrement lisible). Mobile : visuel non recadré + carte qui chevauche.
    -------------------------------------------------------------------------- */
+/* --------------------------------------------------------------------------
+   Héros d'accueil — occupé sur toute la largeur de la fenêtre (marges de 4vw),
+   affiche d'accueil entière à droite, accroche à gauche alignée sur la marge.
+   Ces styles ne concernent que index.html ; les pages intérieures utilisent
+   .page-hero et ne sont pas affectées.
+   -------------------------------------------------------------------------- */
 .hero {
   position: relative;
   isolation: isolate;
   background: var(--paper);
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 62%;
   align-items: center;
-  gap: clamp(24px, 3.4vw, 64px);
-  padding-block: clamp(20px, 2.4vw, 36px) clamp(24px, 2.8vw, 44px);
+  gap: clamp(24px, 3vw, 56px);
+  padding: clamp(18px, 2vw, 34px) clamp(20px, 4vw, 96px) clamp(22px, 2.6vw, 46px);
 }
-/* L'affiche d'accueil : entière, en grand, sans recadrage */
+/* Affiche d'accueil : entière, en grand, coins arrondis, sans recadrage */
 .hero__media {
   position: relative;
   order: 2;
-  flex: 0 0 50%;
-  max-width: 50%;
+  width: 100%;
+  align-self: center;
   aspect-ratio: 16 / 9;
-  /* affiche en pleine saignée à droite : coins arrondis uniquement côté texte */
-  border-radius: clamp(14px, 1.3vw, 22px) 0 0 clamp(14px, 1.3vw, 22px);
+  border-radius: clamp(14px, 1.2vw, 22px);
   overflow: hidden;
   background: var(--ink);
   box-shadow: var(--shadow-l);
@@ -510,44 +516,51 @@ body.drawer-open .nav-toggle span::after { transform: translateY(-6px) rotate(-4
 
 .hero__inner {
   order: 1;
-  flex: 1 1 auto;
   min-width: 0;
-  padding-left: max(var(--gutter), calc((100vw - var(--max)) / 2 + var(--gutter)));
   text-align: left;
 }
 .hero-card {
-  max-width: 560px;
   color: var(--ink);
 }
 .hero-card .eyebrow { color: var(--red); margin-bottom: 12px; }
 .hero-card h1 {
-  font-size: clamp(1.7rem, 2.5vw, 2.4rem);
+  font-size: clamp(1.7rem, 2.3vw, 2.45rem);
   margin-bottom: 14px;
+  max-width: 18ch;
 }
 .hero-card .lead {
   color: var(--ink-soft);
   margin: 0;
-  font-size: clamp(0.95rem, 1.02vw, 1.04rem);
-  max-width: 44ch;
+  font-size: clamp(0.95rem, 1.02vw, 1.05rem);
+  max-width: 46ch;
 }
 .hero-card__cta {
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
-  margin-top: clamp(18px, 2vw, 26px);
+  margin-top: clamp(18px, 2vw, 28px);
 }
 .hero-card__facts {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px 22px;
-  margin-top: clamp(18px, 2vw, 26px);
+  gap: 8px 24px;
+  margin-top: clamp(18px, 2vw, 28px);
   padding-top: 16px;
   border-top: 1px solid var(--line);
   font-size: 0.79rem;
   color: var(--ink-mute);
+  max-width: 46rem;
 }
 .hero-card__facts span { display: inline-flex; align-items: center; gap: 7px; }
 .hero-card__facts svg { width: 14px; height: 14px; color: var(--red); }
+
+/* Écrans intermédiaires : on redonne de la place au texte */
+@media (max-width: 1500px) {
+  .hero { grid-template-columns: minmax(0, 1fr) 56%; }
+}
+@media (max-width: 1200px) {
+  .hero { grid-template-columns: minmax(0, 1fr) 54%; gap: clamp(20px, 2.4vw, 36px); }
+}
 
 /* --------------------------------------------------------------------------
    6. Bandeau de réassurance
@@ -1064,11 +1077,6 @@ html[data-layout="mobile"] .reveal { transition-duration: 0.45s; }
 /* ==========================================================================
    16. MISE EN PAGE MOBILE
    ========================================================================== */
-/* Desktop intermédiaire : plus de place au texte, affiche un peu plus compacte */
-@media (min-width: 901px) and (max-width: 1200px) {
-  .hero__media { flex-basis: 46%; max-width: 46%; }
-}
-
 @media (max-width: 900px) {
   :root { --gutter: 18px; --header-h: 64px; }
 
@@ -1087,7 +1095,7 @@ html[data-layout="mobile"] .reveal { transition-duration: 0.45s; }
   body { padding-bottom: 74px; }
 
   /* Héros mobile : visuel en 3/2 + carte d'accroche en chevauchement */
-  .hero { display: block; padding-block: 0; gap: 0; }
+  .hero { display: block; padding: 0; gap: 0; }
   .hero__media {
     width: 100%;
     max-width: none;
@@ -1241,7 +1249,7 @@ html[data-layout="mobile"] .dish-grid {
   padding-bottom: 8px;
 }
 html[data-layout="mobile"] .dish-card { scroll-snap-align: start; }
-html[data-layout="mobile"] .hero { display: block; padding-block: 0; gap: 0; }
+html[data-layout="mobile"] .hero { display: block; padding: 0; gap: 0; }
 html[data-layout="mobile"] .hero__media {
   width: 100%;
   max-width: none;
