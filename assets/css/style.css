@@ -684,6 +684,13 @@ body.drawer-open .nav-toggle span::after { transform: translateY(-6px) rotate(-4
 }
 .dish-card__title .kr { font-size: 0.82rem; color: var(--ink-mute); }
 .dish-card__desc { font-size: 0.86rem; color: var(--ink-mute); line-height: 1.5; flex: 1; }
+.dish-card__price small {
+  display: block;
+  font-weight: 500;
+  font-size: 0.72rem;
+  color: var(--ink-mute);
+  margin-top: 2px;
+}
 .dish-card__price {
   font-weight: 700;
   font-size: 1rem;
@@ -889,9 +896,18 @@ body.drawer-open .nav-toggle span::after { transform: translateY(-6px) rotate(-4
   color: var(--ink);
   font-variant-numeric: tabular-nums;
 }
-.dish__price small { display: block; font-weight: 500; font-size: 0.74rem; color: var(--ink-mute); }
+.dish__price small { display: block; font-weight: 500; font-size: 0.74rem; color: var(--ink-mute); white-space: normal; }
 .dish__tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; grid-column: 1 / -1; }
 .dish--photo .dish__tags { grid-column: 2 / -1; }
+
+.price-legend {
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--ink-mute);
+  max-width: 62ch;
+  margin: 16px 0 0;
+}
+.price-legend strong { color: var(--ink-soft); }
 
 .allergen-note {
   margin-top: clamp(28px, 4vw, 44px);
@@ -1303,7 +1319,60 @@ html[data-layout="mobile"] .footer-brand { grid-column: 1 / -1; }
 }
 
 @media print {
-  .site-header, .action-bar, .drawer, .site-footer, .menu-nav, .cta-band { display: none !important; }
+  .site-header, .action-bar, .drawer, .site-footer, .menu-nav, .cta-band, .order-notice { display: none !important; }
   body { padding: 0; background: #fff; }
   .dish { break-inside: avoid; }
 }
+
+/* --------------------------------------------------------------------------
+   Commande en ligne suspendue
+   Utilisé quand SITE.orderingOpen === false (voir assets/js/site.js §1).
+   Rien à modifier ici : le JS ajoute la classe .is-off et le bandeau.
+   -------------------------------------------------------------------------- */
+.order-notice {
+  background: var(--red-soft);
+  border-bottom: 1px solid rgba(201, 63, 52, 0.28);
+}
+.order-notice__inner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 12px var(--gutter);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 4px 14px;
+  text-align: center;
+  font-size: 0.92rem;
+  line-height: 1.4;
+  color: #7d2a22;
+}
+.order-notice__tel {
+  font-weight: 700;
+  color: #a32c24;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  white-space: nowrap;
+}
+.order-notice__tel:hover { color: var(--red-dark); }
+
+/* Boutons « Commander » neutralisés : gris, sans relief, curseur interdit */
+a.is-off,
+a.is-off:hover,
+a.is-off:active {
+  --btn-bg: var(--paper-3);
+  --btn-fg: var(--ink-mute);
+  background: var(--paper-3) !important;
+  color: var(--ink-mute) !important;
+  border-color: var(--line) !important;
+  box-shadow: none !important;
+  transform: none !important;
+  cursor: not-allowed;
+}
+a.is-off svg { opacity: 0.55; }
+.action-bar a.is-off,
+.action-bar a.is-off.is-primary {
+  background: var(--paper-2) !important;
+  color: var(--ink-mute) !important;
+}
+.action-bar a.is-off svg { opacity: 0.5; }

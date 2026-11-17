@@ -12,7 +12,14 @@
     name: "Saveurs de Corée",
     phone: "+33783334997",
     phoneDisplay: "07 83 33 49 97",
-    orderUrl: "https://saveurs-de-coree.onataste.fr/menu/",
+    orderUrl: "https://deliveroo.fr/fr/menu/strasbourg/schiltigheim/saveurs-de-coree/",
+    /* — Interrupteur de la commande en ligne —
+       true  : les boutons « Commander » fonctionnent normalement
+       false : tous les boutons sont neutralisés (grisés, sans lien) et un
+               message s'affiche sous l'en-tête de chaque page              */
+    orderingOpen: true,
+    orderingClosedMessage:
+      "La commande en ligne est momentanément suspendue. Appelez-nous : nous préparons toujours sur place et à emporter.",
     instagram: "https://www.instagram.com/saveursdecoree/",
     // Horaires d'ouverture (0 = dimanche … 6 = samedi)
     hours: {
@@ -76,10 +83,41 @@
   /* ---------------------------------------------------------------------
      3. Liens dynamiques (téléphone, commande, Instagram)
      --------------------------------------------------------------------- */
-  document.querySelectorAll("[data-order]").forEach(function (el) {
-    el.setAttribute("href", SITE.orderUrl);
-    el.setAttribute("rel", "noopener");
-  });
+  var orderLinks = Array.prototype.slice.call(document.querySelectorAll("[data-order]"));
+
+  if (SITE.orderingOpen !== false) {
+    orderLinks.forEach(function (el) {
+      el.setAttribute("href", SITE.orderUrl);
+      el.setAttribute("rel", "noopener");
+    });
+  } else {
+    // Commande suspendue : plus de lien, plus de clic, style désactivé + message
+    orderLinks.forEach(function (el) {
+      el.removeAttribute("href");
+      el.removeAttribute("target");
+      el.removeAttribute("rel");
+      el.setAttribute("aria-disabled", "true");
+      el.setAttribute("tabindex", "-1");
+      el.setAttribute("title", "Commande en ligne momentanément suspendue — " + SITE.phoneDisplay);
+      el.classList.add("is-off");
+      el.addEventListener("click", function (e) { e.preventDefault(); });
+    });
+    showOrderingNotice();
+  }
+
+  function showOrderingNotice() {
+    var header = document.querySelector(".site-header");
+    if (!header || !header.parentNode) return;
+    var bar = document.createElement("div");
+    bar.className = "order-notice";
+    bar.setAttribute("role", "status");
+    bar.innerHTML =
+      '<div class="order-notice__inner">' +
+        '<span>' + SITE.orderingClosedMessage + '</span>' +
+        '<a class="order-notice__tel" href="tel:' + SITE.phone + '">' + SITE.phoneDisplay + '</a>' +
+      '</div>';
+    header.parentNode.insertBefore(bar, header.nextSibling);
+  }
   document.querySelectorAll("[data-tel]").forEach(function (el) {
     el.setAttribute("href", "tel:" + SITE.phone);
   });
